@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: btin7al_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-btin7al_db}
+      POSTGRES_USER: ${POSTGRES_USER:-btin7al_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-btin7al_secure_pass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - btin7al_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-btin7al_user} -d ${POSTGRES_DB:-btin7al_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  btin7al_pgdata:
+    name: btin7al_pgdata
